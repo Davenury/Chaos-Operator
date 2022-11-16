@@ -1,0 +1,102 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: chaos-operator
+  namespace: operator-tryout
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chaos-operator
+  namespace: operator-tryout
+spec:
+  selector:
+    matchLabels:
+      app: chaos-operator
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: chaos-operator
+    spec:
+      serviceAccountName: chaos-operator
+      containers:
+        - name: operator
+          image: ghcr.io/davenury/operator_tryout
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 1
+            timeoutSeconds: 1
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 30
+            timeoutSeconds: 1
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: chaos-operator-admin
+  namespace: operator-tryout
+subjects:
+  - kind: ServiceAccount
+    name: chaos-operator
+    namespace: operator-tryout
+roleRef:
+  kind: ClusterRole
+  name: chaos-operator
+  apiGroup: ""
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: chaos-operator
+  namespace: operator-tryout
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - deployments
+      - services
+      - configmaps
+      - pods
+      - scenarioes
+    verbs:
+      - '*'
+  - apiGroups:
+      - "apps"
+    resources:
+      - deployments
+      - services
+      - configmaps
+      - scenarioes
+    verbs:
+      - '*'
+  - apiGroups:
+      - "apiextensions.k8s.io"
+    resources:
+      - customresourcedefinitions
+    verbs:
+      - '*'
+  - apiGroups:
+      - "lsc.davenury.github.com"
+    resources:
+      - scenarioes
+      - scenarioes/status
+    verbs:
+      - '*'
+  - apiGroups:
+      - "networking.k8s.io"
+    resources:
+      - ingresses
+    verbs:
+      - '*'

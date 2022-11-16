@@ -1,0 +1,18 @@
+apiVersion: lsc.davenury.github.com/v1
+kind: Scenario
+metadata:
+  name: sample
+  namespace: operator-tryout
+spec:
+  actions:
+    - durationInMillis: 60000
+      namespace: operator-tryout
+      resourceType: deployment
+      resourceName: subject
+      action: scale
+      value: 0
+    - durationInMillis: 60000
+      namespace: operator-tryout
+      resourceType: deployment
+      resourceName: delete
+      action: scale
