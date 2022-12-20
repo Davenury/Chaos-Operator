@@ -1,4 +1,4 @@
-package com.github.davenury.lsc_operator
+package com.github.davenury.operator
 
 import io.fabric8.kubernetes.client.KubernetesClientBuilder
 import io.javaoperatorsdk.operator.Operator
@@ -7,8 +7,6 @@ class ScenarioOperator {
 
     fun run() {
         try {
-            println("Running ScenarioOperator")
-
             val client = KubernetesClientBuilder().build()
             val operator = Operator(client)
             operator.register(ScenarioReconciler(client))

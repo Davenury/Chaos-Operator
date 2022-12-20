@@ -1,6 +1,6 @@
-package com.github.davenury.lsc_operator.actions
+package com.github.davenury.operator.actions
 
-import com.github.davenury.lsc_operator.ActionSpec
+import com.github.davenury.operator.ActionSpec
 import io.fabric8.kubernetes.client.KubernetesClient
 
 interface Action {
@@ -12,10 +12,10 @@ interface Action {
 }
 
 class Actions(
-    private val spec: ActionSpec
+    spec: ActionSpec
 ) {
 
-    private val actions = listOf(ScaleDeploymentAction(spec), DeletePodAction(spec))
+    private val actions: List<Action> = listOf(ScaleDeploymentAction(spec), DeletePodAction(spec), DeleteServiceAction(spec))
 
     fun getAction(resourceType: String, verb: String): Action? {
         return actions.find {

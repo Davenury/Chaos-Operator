@@ -1,8 +1,6 @@
-package com.github.davenury.lsc_operator
+package com.github.davenury.operator
 
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import com.github.davenury.lsc_operator.actions.Actions
-import com.github.davenury.lsc_operator.actions.ScaleDeploymentAction
 import io.fabric8.kubernetes.client.utils.Serialization
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*

@@ -4,15 +4,21 @@ metadata:
   name: sample
   namespace: operator-tryout
 spec:
-  actions:
+  phases:
     - durationInMillis: 60000
-      namespace: operator-tryout
-      resourceType: deployment
-      resourceName: subject
-      action: scale
-      value: 0
-    - durationInMillis: 60000
-      namespace: operator-tryout
-      resourceType: deployment
-      resourceName: delete
-      action: scale
+      actions:
+      - namespace: operator-tryout
+        resourceType: deployment
+        resourceName: subject
+        action: scale
+        value: 2
+      - namespace: operator-tryout
+        resourceType: deployment
+        resourceName: delete
+        action: scale
+    - durationInMillis: 30000
+      actions:
+        - namespace: operator-tryout
+          resourceType: pod
+          resourceName: ##
+          action: delete

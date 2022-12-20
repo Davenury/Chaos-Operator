@@ -1,9 +1,11 @@
-package com.github.davenury.lsc_operator
+package com.github.davenury.operator
 
-import com.github.davenury.lsc_operator.actions.Actions
-import com.github.davenury.lsc_operator.actions.Scheduler
+import com.github.davenury.operator.actions.Actions
+import com.github.davenury.operator.actions.Scheduler
 import io.fabric8.kubernetes.client.KubernetesClient
 import io.javaoperatorsdk.operator.api.reconciler.*
+import java.time.Duration
+import java.util.concurrent.TimeUnit
 
 @ControllerConfiguration
 class ScenarioReconciler(
@@ -23,22 +25,27 @@ class ScenarioReconciler(
                 0
             }
 
-            if (!scenarioStates[scenarioName]!!.completed) {
-                val spec = scenario.spec.actions[counter]
-                val action = Actions(spec).getAction(spec.resourceType, spec.action) ?: kotlin.run {
-                    println("Action for ${spec.action} ${spec.resourceType} is not found, skipping")
-                    return UpdateControl.updateStatus(scenario)
-                }
-
-                action.applyAction(client)
-                Scheduler.schedule(spec.durationInMillis) { action.reverseAction(client) }
+            scenario.spec.phases[counter].actions.forEach {
+                Actions(it).getAction(it.resourceType, it.resourceName)?.reverseAction(client)
             }
 
-            if (scenarioStates[scenarioName]!!.counter < scenario.spec.actions.size) {
+            if (!scenarioStates[scenarioName]!!.completed) {
+                scenario.spec.phases[counter].actions.forEach { spec ->
+                    val action = Actions(spec).getAction(spec.resourceType, spec.action) ?: kotlin.run {
+                        println("Action for ${spec.action} ${spec.resourceType} is not found, skipping")
+                        return UpdateControl.updateStatus(scenario)
+                    }
+
+                    action.applyAction(client)
+                }
+            }
+
+            if (scenarioStates[scenarioName]!!.counter < scenario.spec.phases.size) {
                scenarioStates[scenarioName] = ScenarioState(counter + 1, false)
             } else {
                 scenarioStates[scenarioName] = ScenarioState(counter, true)
             }
+            return UpdateControl.updateStatus(scenario).rescheduleAfter(scenario.spec.phases[scenarioStates[scenarioName]!!.counter].durationInMillis, TimeUnit.MILLISECONDS)
         }
         return UpdateControl.updateStatus(scenario)
     }

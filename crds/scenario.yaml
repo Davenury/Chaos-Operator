@@ -15,31 +15,38 @@ spec:
             spec:
               type: object
               properties:
-                actions:
+                phases:
                   type: array
                   items:
                     type: object
                     properties:
                       durationInMillis:
                         type: number
-                      namespace:
-                        type: string
-                      resourceType:
-                        type: string
-                      resourceName:
-                        type: string
-                      action:
-                        type: string
-                      value:
-                        type: number
+                      actions:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            namespace:
+                              type: string
+                            resourceType:
+                              type: string
+                            resourceName:
+                              type: string
+                            action:
+                              type: string
+                            value:
+                              type: number
+                          required:
+                            - namespace
+                            - resourceType
+                            - resourceName
+                            - action
                     required:
+                      - actions
                       - durationInMillis
-                      - namespace
-                      - resourceType
-                      - resourceName
-                      - action
               required:
-                - actions
+                - phases
             status:
               type: object
               properties:

@@ -1,2 +1,2 @@
-rootProject.name = "tryout"
+rootProject.name = "Chaos-Operator"
 

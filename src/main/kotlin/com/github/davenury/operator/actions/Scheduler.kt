@@ -1,4 +1,4 @@
-package com.github.davenury.lsc_operator.actions
+package com.github.davenury.operator.actions
 
 import java.util.*
 

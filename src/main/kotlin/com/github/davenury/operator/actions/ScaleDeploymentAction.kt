@@ -1,6 +1,6 @@
-package com.github.davenury.lsc_operator.actions
+package com.github.davenury.operator.actions
 
-import com.github.davenury.lsc_operator.ActionSpec
+import com.github.davenury.operator.ActionSpec
 import io.fabric8.kubernetes.client.KubernetesClient
 
 
