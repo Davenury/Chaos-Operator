@@ -1,4 +1,11 @@
 apiVersion: v1
+kind: Namespace
+metadata:
+  name: operator-tryout
+
+---
+
+apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: chaos-operator
@@ -23,7 +30,7 @@ spec:
       serviceAccountName: chaos-operator
       containers:
         - name: operator
-          image: ghcr.io/davenury/operator_tryout
+          image: ghcr.io/davenury/chaos-operator
           imagePullPolicy: Always
           ports:
             - containerPort: 80

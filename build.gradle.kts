@@ -7,11 +7,11 @@ plugins {
 val javaOperatorVersion = "4.1.1"
 val ktor_version: String = "2.1.3"
 
-group = "com.github.davenury.lsc_operator"
+group = "com.github.davenury.operator"
 version = "1.0-SNAPSHOT"
 
 application {
-    mainClass.set("com.github.davenury.lsc_operator.ApplicationKt")
+    mainClass.set("com.github.davenury.operator.ApplicationKt")
 }
 
 repositories {

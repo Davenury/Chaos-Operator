@@ -22,3 +22,9 @@ spec:
           resourceType: pod
           resourceName: ##
           action: delete
+    - durationInMillis: 10000
+      actions:
+        - namespace: operator-tryout
+          resourceType: service
+          resourceName: ##
+          action: delete

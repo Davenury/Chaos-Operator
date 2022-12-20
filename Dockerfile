@@ -9,6 +9,6 @@ RUN gradle installDist --no-daemon
 
 FROM adoptopenjdk:11-jre-hotspot
 WORKDIR /application
-COPY --from=builder /home/gradle/src/build/install/tryout .
+COPY --from=builder /home/gradle/src/build/install/Chaos-Operator .
 
-ENTRYPOINT ["bash", "-c", "/application/bin/tryout"]
+ENTRYPOINT ["bash", "-c", "/application/bin/Chaos-Operator"]
