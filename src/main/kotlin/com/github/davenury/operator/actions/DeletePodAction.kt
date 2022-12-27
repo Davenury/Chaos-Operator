@@ -22,6 +22,8 @@ class DeletePodAction(
         }
     }
 
+    override fun getName() = "Delete pod"
+
     override fun reverseAction(client: KubernetesClient) {
         client.pods().inNamespace(spec.namespace).createOrReplace(podSpec)
     }

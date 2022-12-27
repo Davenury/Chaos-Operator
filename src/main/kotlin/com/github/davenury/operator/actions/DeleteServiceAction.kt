@@ -21,6 +21,8 @@ class DeleteServiceAction(
         }
     }
 
+    override fun getName() = "Delete service"
+
     override fun reverseAction(client: KubernetesClient) {
         client.services().inNamespace(spec.namespace).createOrReplace(serviceSpec)
     }

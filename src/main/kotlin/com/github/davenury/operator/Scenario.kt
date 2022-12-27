@@ -7,7 +7,7 @@ import io.fabric8.kubernetes.client.CustomResource
 import io.fabric8.kubernetes.model.annotation.Group
 import io.fabric8.kubernetes.model.annotation.Version
 import io.javaoperatorsdk.operator.api.ObservedGenerationAwareStatus
-import javax.swing.Action
+import java.time.Duration
 
 @Group("lsc.davenury.github.com")
 @Version("v1")
@@ -24,7 +24,7 @@ data class ScenarioSpec(
 @JsonDeserialize
 data class Phase(
     val actions: List<ActionSpec>,
-    val durationInMillis: Long
+    val duration: Duration
 )
 
 @JsonDeserialize
@@ -40,8 +40,12 @@ data class ActionSpec(
 class ScenarioStatus: ObservedGenerationAwareStatus(), KubernetesResource {
 
     var errorMessage: String = ""
+    var status: ScenarioStatus = ScenarioStatus.NEW
 
     override fun toString(): String =
-        "ScenarioStatus{errorMessage=$errorMessage}"
+        "ScenarioStatus{errorMessage=$errorMessage,status=${status.name}}"
 
+    enum class ScenarioStatus {
+        NEW, IN_PROGRESS, COMPLETED
+    }
 }

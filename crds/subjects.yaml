@@ -19,3 +19,32 @@ spec:
           # Just spin & wait forever
           command: [ "/bin/bash", "-c", "--" ]
           args: [ "while true; do sleep 30; done;" ]
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service
+  namespace: operator-tryout
+spec:
+  selector:
+    app.kubernetes.io/name: MyApp
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 9376
+
+---
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+  namespace: operator-tryout
+spec:
+  containers:
+    - name: nginx
+      image: nginx:1.14.2
+      ports:
+        - containerPort: 80

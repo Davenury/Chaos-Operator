@@ -5,26 +5,22 @@ metadata:
   namespace: operator-tryout
 spec:
   phases:
-    - durationInMillis: 60000
+    - duration: PT6S
       actions:
       - namespace: operator-tryout
         resourceType: deployment
         resourceName: subject
         action: scale
         value: 2
-      - namespace: operator-tryout
-        resourceType: deployment
-        resourceName: delete
-        action: scale
-    - durationInMillis: 30000
+    - duration: PT3S
       actions:
         - namespace: operator-tryout
           resourceType: pod
-          resourceName: ##
+          resourceName: nginx
           action: delete
-    - durationInMillis: 10000
+    - duration: PT2S
       actions:
         - namespace: operator-tryout
           resourceType: service
-          resourceName: ##
+          resourceName: my-service
           action: delete

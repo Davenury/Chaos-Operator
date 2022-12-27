@@ -9,6 +9,7 @@ interface Action {
 
     fun applyAction(client: KubernetesClient)
     fun reverseAction(client: KubernetesClient)
+    fun getName(): String
 }
 
 class Actions(
