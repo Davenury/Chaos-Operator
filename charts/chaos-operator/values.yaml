@@ -1,0 +1,18 @@
+namespace:
+  name: chaos-operator
+  enable: true
+
+operator:
+  deployment_name: chaos-operator
+  image: ghcr.io/davenury/chaos-operator:latest
+
+serviceAccount:
+  name: chaos-operator
+  enable: true
+  clusterRole:
+    name: chaos-operator
+
+samples:
+  deployment: true
+  single_pod: true
+  service: true

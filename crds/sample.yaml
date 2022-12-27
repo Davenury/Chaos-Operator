@@ -2,25 +2,25 @@ apiVersion: lsc.davenury.github.com/v1
 kind: Scenario
 metadata:
   name: sample
-  namespace: operator-tryout
+  namespace: chaos-operator
 spec:
   phases:
     - duration: PT6S
       actions:
-      - namespace: operator-tryout
+      - namespace: chaos-operator
         resourceType: deployment
-        resourceName: subject
+        resourceName: sample-deployment
         action: scale
         value: 2
     - duration: PT3S
       actions:
-        - namespace: operator-tryout
+        - namespace: chaos-operator
           resourceType: pod
           resourceName: nginx
           action: delete
     - duration: PT2S
       actions:
-        - namespace: operator-tryout
+        - namespace: chaos-operator
           resourceType: service
           resourceName: my-service
           action: delete

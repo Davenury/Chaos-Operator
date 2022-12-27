@@ -1,0 +1,64 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: scenarioes.lsc.davenury.github.com
+spec:
+  group: lsc.davenury.github.com
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      subresources:
+        status: {}
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                phases:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      duration:
+                        type: string
+                        description: ISO-8601 duration, e.g. PT5S
+                      actions:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            namespace:
+                              type: string
+                            resourceType:
+                              type: string
+                            resourceName:
+                              type: string
+                            action:
+                              type: string
+                            value:
+                              type: number
+                          required:
+                            - namespace
+                            - resourceType
+                            - resourceName
+                            - action
+                    required:
+                      - actions
+                      - duration
+              required:
+                - phases
+            status:
+              type: object
+              properties:
+                errorMessage:
+                  type: string
+                status:
+                  type: string
+  scope: Namespaced
+  names:
+    plural: scenarioes
+    singular: scenario
+    kind: Scenario

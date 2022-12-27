@@ -1,0 +1,54 @@
+{{ if .Values.samples.deployment }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sample-deployment
+  namespace: {{ .Values.namespace.name }}
+spec:
+  selector:
+    matchLabels:
+      app: subject
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: subject
+    spec:
+      containers:
+        - name: ubuntu
+          image: ubuntu:latest
+          # Just spin & wait forever
+          command: [ "/bin/bash", "-c", "--" ]
+          args: [ "while true; do sleep 30; done;" ]
+{{ end }}
+---
+{{ if .Values.samples.single_pod }}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+  namespace: {{ .Values.namespace.name }}
+spec:
+  containers:
+    - name: nginx
+      image: nginx:1.14.2
+      ports:
+        - containerPort: 80
+{{ end }}
+
+---
+
+{{ if .Values.samples.service }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service
+  namespace: {{ .Values.namespace.name }}
+spec:
+  selector:
+    app.kubernetes.io/name: MyApp
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 9376
+{{ end }}
