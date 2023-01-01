@@ -39,13 +39,13 @@ data class ActionSpec(
 @JsonDeserialize
 class ScenarioStatus: ObservedGenerationAwareStatus(), KubernetesResource {
 
-    var errorMessage: String = ""
+    var errorMessage: String = "---------"
     var status: ScenarioStatus = ScenarioStatus.NEW
 
     override fun toString(): String =
         "ScenarioStatus{errorMessage=$errorMessage,status=${status.name}}"
 
     enum class ScenarioStatus {
-        NEW, IN_PROGRESS, COMPLETED
+        NEW, IN_PROGRESS, COMPLETED, ERROR
     }
 }

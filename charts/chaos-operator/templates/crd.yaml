@@ -6,6 +6,13 @@ spec:
   group: lsc.davenury.github.com
   versions:
     - name: v1
+      additionalPrinterColumns:
+        - name: Status
+          type: string
+          jsonPath: .status.status
+        - name: Error message
+          type: string
+          jsonPath: .status.errorMessage
       served: true
       storage: true
       subresources:

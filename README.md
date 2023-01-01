@@ -7,11 +7,16 @@ By that term we understand chaos engineering without "random" part. Sometimes it
 apply different chaos actions in controlled way.
 
 ### Installation
-Either by applying single manifests from `crds` directory or by helm. Move into `charts` directory and
+Either by applying single manifests from `crds` directory or by helm. Move into `charts/chaos-operator` directory and
 ```bash
 helm install <release name> .
 ```
 (Work in Progress - having chart deployed in chart registry).
+Helm chart will create chaos-operator deployment, as well as needed resources (those can be disabled by modifying `values.yaml` file).
+To execute sample scenario, enter the `crds` directory and:
+```bash
+kubectl apply -f sample.yaml
+```
 
 ### Scenario definition
 Sample definition is like this:
