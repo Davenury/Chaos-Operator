@@ -7,11 +7,42 @@ By that term we understand chaos engineering without "random" part. Sometimes it
 apply different chaos actions in controlled way.
 
 ### Installation
-Either by applying single manifests from `crds` directory or by helm. Move into `charts/chaos-operator` directory and
+Either by applying single manifests from `crds` directory or by helm (easier). To install by helm, add repository:
 ```bash
-helm install <release name> .
+helm repo add <repository name> https://davenury.github.io/Chaos-Operator
 ```
-(Work in Progress - having chart deployed in chart registry).
+and then install release:
+
+```bash
+helm install <release name> <repository name>/chaos-operator
+```
+
+You can also customize your deployment, by providing file with values. Given a file named `values.yaml` in your current directory:
+```yaml
+namespace:
+  name: chaos-operator    # namespace to deploy operator and samples, if applied
+  enable: true            # whether to create namespace
+
+operator:
+  deployment_name: chaos-operator         # name of deployment 
+  image: ghcr.io/davenury/chaos-operator:latest   # image of chaos operator, for specific versions, head to: https://github.com/users/Davenury/packages/container/package/chaos-operator
+
+serviceAccount:
+  name: chaos-operator      # name of the service account
+  enable: true              # whether to create the service account
+  clusterRole:
+    name: chaos-operator    # name of the cluster role
+
+samples:                    # whether to create a sample applications to demonstrate the capabilities of the operator
+  deployment: true          # creates sample-deployment, used by default scenario in the first phase
+  single_pod: true          # creates nginx pod, used by default scenario in the second phase
+  service: true             # creates sample-service, used by default scenario in the third phase
+```
+you can pass new values while installing the release:
+```bash
+helm install <release name> <repository name>/chaos-operator -f values.yaml
+```
+
 Helm chart will create chaos-operator deployment, as well as needed resources (those can be disabled by modifying `values.yaml` file).
 To execute sample scenario, enter the `crds` directory and:
 ```bash
@@ -28,20 +59,20 @@ metadata:
   namespace: chaos-operator
 spec:
   phases:
-    - duration: PT6S
+    - duration: PT60S
       actions:
       - namespace: chaos-operator
         resourceType: deployment
         resourceName: sample-deployment
         action: scale
         value: 2
-    - duration: PT3S
+    - duration: PT30S
       actions:
         - namespace: chaos-operator
           resourceType: pod
           resourceName: nginx
           action: delete
-    - duration: PT2S
+    - duration: PT20S
       actions:
         - namespace: chaos-operator
           resourceType: service
