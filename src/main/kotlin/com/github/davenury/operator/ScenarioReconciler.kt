@@ -31,6 +31,8 @@ class ScenarioReconciler(
                 }
                 logger.info("Beginning phase $counter")
 
+                applyReverseActions()
+                
                 if (scenarioStates[scenarioName]!!.counter < scenario.spec.phases.size - 1) {
                     scenarioStates[scenarioName] = ScenarioState(counter, false)
                 } else {
@@ -61,6 +63,7 @@ class ScenarioReconciler(
                 }
                 return UpdateControl.updateStatus(scenario.apply { it.status.status = ScenarioStatus.ScenarioStatus.COMPLETED })
             } catch (e: Exception) {
+                logger.error("Error while executing scenario phase", e)
                 return UpdateControl.updateStatus(scenario.apply {
                     it.status?.status = ScenarioStatus.ScenarioStatus.ERROR
                     it.status?.errorMessage = "Error in operator. Contact devs. Error message: ${e.message}"
