@@ -10,9 +10,6 @@ spec:
         - name: Status
           type: string
           jsonPath: .status.status
-        - name: Error message
-          type: string
-          jsonPath: .status.errorMessage
       served: true
       storage: true
       subresources:
@@ -45,12 +42,31 @@ spec:
                               type: string
                             action:
                               type: string
-                            value:
-                              type: number
+                            scaleDeploymentSpec:
+                              type: object
+                              properties:
+                                value:
+                                  type: number
+                              required:
+                                - value
+                            networkIsolationSpec:
+                              type: object
+                              properties:
+                                labelKey:
+                                  type: string
+                                operator:
+                                  type: string
+                                values:
+                                  type: array
+                                  items:
+                                    type: string
+                              required:
+                                - labelKey
+                                - operator
+                                - values
                           required:
                             - namespace
                             - resourceType
-                            - resourceName
                             - action
                     required:
                       - actions

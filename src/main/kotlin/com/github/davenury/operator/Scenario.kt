@@ -31,9 +31,24 @@ data class Phase(
 data class ActionSpec(
     val namespace: String,
     val resourceType: String,
-    val resourceName: String,
+    val resourceName: String? = null,
     val action: String,
-    val value: Int? = null
+    val scaleDeploymentSpec: ScaleDeploymentSpec? = null,
+    val networkIsolationSpec: NetworkIsolationSpec? = null,
+)
+
+data class ScaleDeploymentSpec(
+    val value: Int
+)
+
+data class NetworkIsolationSpec(
+    val selectorSpec: SelectorSpec
+)
+
+data class SelectorSpec(
+    val labelKey: String,
+    val operator: String,
+    val values: List<String>
 )
 
 @JsonDeserialize

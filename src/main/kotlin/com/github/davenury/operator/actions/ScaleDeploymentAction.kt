@@ -17,7 +17,7 @@ class ScaleDeploymentAction(
 
     override fun applyAction(client: KubernetesClient) {
         currentValue = client.apps().deployments().inNamespace(spec.namespace).withName(spec.resourceName).get().spec.replicas
-        client.apps().deployments().inNamespace(spec.namespace).withName(spec.resourceName).scale(spec.value!!)
+        client.apps().deployments().inNamespace(spec.namespace).withName(spec.resourceName).scale(spec.scaleDeploymentSpec!!.value)
     }
 
     override fun getName() = "Scale Deployment"

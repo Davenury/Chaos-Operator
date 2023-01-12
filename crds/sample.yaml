@@ -11,7 +11,8 @@ spec:
           resourceType: deployment
           resourceName: sample-deployment
           action: scale
-          value: 2
+          scaleDeploymentSpec:
+            value: 2
         - namespace: chaos-operator
           resourceType: pod
           resourceName: nginx
@@ -22,3 +23,14 @@ spec:
           resourceType: service
           resourceName: my-service
           action: delete
+    - duration: PT60M
+      actions:
+        - namespace: chaos-operator
+          resourceType: network
+          action: isolate
+          networkIsolationSpec:
+            labelKey: app.name
+            operator: In
+            values:
+              - peer0-peerset0-app
+              - peer1-peerset0-app
