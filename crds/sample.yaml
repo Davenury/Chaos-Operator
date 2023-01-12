@@ -5,25 +5,25 @@ metadata:
   namespace: chaos-operator
 spec:
   phases:
-    - duration: PT1S
-      actions: []
-#        - namespace: chaos-operator
-#          resourceType: deployment
-#          resourceName: sample-deployment
-#          action: scale
-#          scaleDeploymentSpec:
-#            value: 2
-#        - namespace: chaos-operator
-#          resourceType: pod
-#          resourceName: nginx
-#          action: delete
-#    - duration: PT20S
-#      actions:
-#        - namespace: chaos-operator
-#          resourceType: service
-#          resourceName: my-service
-#          action: delete
-    - duration: PT60M
+    - duration: PT30S
+      actions:
+        - namespace: chaos-operator
+          resourceType: deployment
+          resourceName: sample-deployment
+          action: scale
+          scaleDeploymentSpec:
+            value: 2
+        - namespace: chaos-operator
+          resourceType: pod
+          resourceName: nginx
+          action: delete
+    - duration: PT20S
+      actions:
+        - namespace: chaos-operator
+          resourceType: service
+          resourceName: my-service
+          action: delete
+    - duration: PT2M
       actions:
         - namespace: chaos-operator
           resourceType: network
