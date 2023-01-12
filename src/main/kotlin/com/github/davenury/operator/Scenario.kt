@@ -42,10 +42,6 @@ data class ScaleDeploymentSpec(
 )
 
 data class NetworkIsolationSpec(
-    val selectorSpec: SelectorSpec
-)
-
-data class SelectorSpec(
     val labelKey: String,
     val operator: String,
     val values: List<String>

@@ -71,7 +71,7 @@ class NetworkIsolation(
     }
 
     private fun NetworkIsolationSpec.toLabelSelectorRequirement(): LabelSelectorRequirement =
-        LabelSelectorRequirement(this.selectorSpec.labelKey, this.selectorSpec.operator, this.selectorSpec.values)
+        LabelSelectorRequirement(this.labelKey, this.operator, this.values)
 
     override fun reverseAction(client: KubernetesClient) {
         client.network().networkPolicies().inNamespace(spec.namespace).withName(networkPolicyName).delete()
