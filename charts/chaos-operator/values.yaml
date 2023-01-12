@@ -13,6 +13,6 @@ serviceAccount:
     name: chaos-operator
 
 samples:
-  deployment: true
-  single_pod: true
-  service: true
+  deployment: false
+  single_pod: false
+  service: false

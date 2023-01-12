@@ -5,7 +5,7 @@ metadata:
   namespace: chaos-operator
 spec:
   phases:
-    - duration: PT1M
+    - duration: PT1S
       actions: []
 #        - namespace: chaos-operator
 #          resourceType: deployment

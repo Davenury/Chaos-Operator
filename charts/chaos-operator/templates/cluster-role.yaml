@@ -32,6 +32,12 @@ metadata:
   namespace: {{ .Values.namespace.name | default "default" }}
 rules:
   - apiGroups:
+      - "networking.k8s.io"
+    resources:
+      - networkpolicies
+    verbs:
+      - "*"
+  - apiGroups:
       - ""
     resources:
       - deployments

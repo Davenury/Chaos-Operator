@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: operator-tryout
+  name: chaos-operator
 
 ---
 
@@ -9,14 +9,14 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: chaos-operator
-  namespace: operator-tryout
+  namespace: chaos-operator
 
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: chaos-operator
-  namespace: operator-tryout
+  namespace: chaos-operator
 spec:
   selector:
     matchLabels:
@@ -52,11 +52,11 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: chaos-operator-admin
-  namespace: operator-tryout
+  namespace: chaos-operator
 subjects:
   - kind: ServiceAccount
     name: chaos-operator
-    namespace: operator-tryout
+    namespace: chaos-operator
 roleRef:
   kind: ClusterRole
   name: chaos-operator
@@ -67,7 +67,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: chaos-operator
-  namespace: operator-tryout
+  namespace: chaos-operator
 rules:
   - apiGroups:
       - ""
@@ -88,6 +88,12 @@ rules:
       - scenarioes
     verbs:
       - '*'
+  - apiGroups:
+      - "networking.k8s.io"
+    resources:
+      - networkpolicies
+    verbs:
+      - "*"
   - apiGroups:
       - "apiextensions.k8s.io"
     resources:
