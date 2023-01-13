@@ -28,7 +28,6 @@ export const Peer = ({ peerId, peersetId, port }) => {
             .then(res => res.json())
             .then(data => {
                 setCurrentEntryId(data.parentId ?? firstParentId)
-                console.log(`Peer ${peerId} - current entry id: ${data.parentId ?? firstParentId}`)
             })
     }
 
@@ -94,6 +93,7 @@ const CreateChangeButton = ({ address, changes, currentEntryId }) => {
     }
 
     const introduceChange = () => {
+        console.log(`Creating change. Current Entry Id: ${currentEntryId}`)
         fetch(address, {
             method: "POST",
             body: JSON.stringify(createChange()),
