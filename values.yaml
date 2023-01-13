@@ -1,0 +1,7 @@
+namespace:
+  enable: false
+
+samples:
+  deployment: false
+  single_pod: false
+  service: false

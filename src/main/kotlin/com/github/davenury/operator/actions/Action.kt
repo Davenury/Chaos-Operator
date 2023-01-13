@@ -6,7 +6,6 @@ import io.fabric8.kubernetes.client.KubernetesClient
 interface Action {
     val resourceType: String
     val verb: String
-
     fun applyAction(client: KubernetesClient)
     fun reverseAction(client: KubernetesClient)
     fun getName(): String

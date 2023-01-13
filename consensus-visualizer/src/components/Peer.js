@@ -3,33 +3,50 @@ import {useState, useEffect} from "react"
 
 const firstParentId = "27c74670adb75075fad058d5ceaf7b20c4e7786c83bae8a32f626f9782af34c9a33c2046ef60fd2a7878d378e29fec851806bbd9a67878f3a9f1cda4830763fd"
 
-export const Peer = ({ peerId, peersetId }) => {
+export const Peer = ({ peerId, peersetId, port }) => {
 
     const [changes, setChanges] = useState([])
     const [open, setOpen] = useState(false)
+    const [currentEntryId, setCurrentEntryId] = useState(firstParentId)
 
-    const getChangeAddress = () => `http://peer${peerId}-peerset${peersetId}-service:8080/v2/change`
+    const getPeerBaseAddress = () => `http://172.18.0.2:${port}`
 
     const askForChanges = () => {
-        fetch(getChangeAddress)
+        fetch(`${getPeerBaseAddress()}/v2/change`, {
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
             .then(res => res.json())
             .then(data => setChanges(data))
+
+        fetch(`${getPeerBaseAddress()}/v2/parent_id?peersetId=0`, {
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+            .then(res => res.json())
+            .then(data => {
+                setCurrentEntryId(data.parentId ?? firstParentId)
+                console.log(`Peer ${peerId} - current entry id: ${data.parentId ?? firstParentId}`)
+            })
     }
 
     useEffect(() => {
         const interval = setInterval(() => {
             askForChanges()
-        }, 2000)
+        }, 1000)
 
         return () => clearInterval(interval)
     }, [])
+
 
     const handleClickOpen = () => setOpen(!open)
 
     return (
         <Box sx={{width: "100%", height: "20em", backgroundColor: "#d0f0c0", padding: "1em"}}>
             <Typography variant="h5">Peer {peerId}</Typography>
-            <CreateChangeButton address={getChangeAddress()} changes={changes} />
+            <CreateChangeButton address={`${getPeerBaseAddress()}/v2/change/async`} changes={changes} currentEntryId={currentEntryId} />
 
             <Button style={{marginTop: "2em"}} variant="outlined" onClick={handleClickOpen}>View current changes</Button>
 
@@ -61,25 +78,15 @@ const SingleChange = ({ change }) => {
     )
 }
 
-const CreateChangeButton = ({ address, changes }) => {
-
-    const getParentIdFromChange = () => {
-        const lastChange = changes.at(-1)
-        if (!lastChange) {
-            return firstParentId
-        }
-        return "xddd" //TODO - need to serialize and do the things
-    }
+const CreateChangeButton = ({ address, changes, currentEntryId }) => {
 
     const createChange = () => {
-        const parentId = getParentIdFromChange()
-
         return {
             "@type": "ADD_USER",
             "peersets": [
               {
                 "peersetId": 0,
-                "parentId": parentId
+                "parentId": currentEntryId
              }
             ],
             "userName": `user${changes.length + 1}`
@@ -93,8 +100,7 @@ const CreateChangeButton = ({ address, changes }) => {
             headers: {
                 "Content-Type": "application/json"
             }
-        }).then(res => res.json())
-        .then(data => console.log(data))
+        })
     }
 
     return (

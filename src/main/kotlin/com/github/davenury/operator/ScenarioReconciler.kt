@@ -19,7 +19,7 @@ class ScenarioReconciler(
             it.status = ScenarioStatus()
             logger.info("$scenario")
             try {
-                val scenarioName = scenario.crdName
+                val scenarioName = scenario.metadata.name
 
                 val counter = if (scenarioStates.containsKey(scenarioName)) {
                     scenario.status?.status = ScenarioStatus.ScenarioStatus.IN_PROGRESS

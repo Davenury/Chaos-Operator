@@ -1,29 +1,19 @@
 apiVersion: lsc.davenury.github.com/v1
 kind: Scenario
 metadata:
-  name: sample
+  name: new-scenario
   namespace: chaos-operator
 spec:
   phases:
-    - duration: PT30S
+    - duration: PT1M
       actions:
-        - namespace: chaos-operator
-          resourceType: deployment
-          resourceName: sample-deployment
-          action: scale
-          scaleDeploymentSpec:
-            value: 2
-        - namespace: chaos-operator
-          resourceType: pod
-          resourceName: nginx
-          action: delete
-    - duration: PT20S
-      actions:
-        - namespace: chaos-operator
-          resourceType: service
-          resourceName: my-service
-          action: delete
-    - duration: PT2M
+       - namespace: chaos-operator
+         resourceType: deployment
+         resourceName: peerset0-peer3-dep
+         action: scale
+         scaleDeploymentSpec:
+           value: 0
+    - duration: PT5M
       actions:
         - namespace: chaos-operator
           resourceType: network
