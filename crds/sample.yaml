@@ -5,7 +5,7 @@ metadata:
   namespace: chaos-operator
 spec:
   phases:
-    - duration: PT1M
+    - duration: PT30S
       actions:
        - namespace: chaos-operator
          resourceType: deployment
@@ -13,7 +13,7 @@ spec:
          action: scale
          scaleDeploymentSpec:
            value: 0
-    - duration: PT5M
+    - duration: PT1M
       actions:
         - namespace: chaos-operator
           resourceType: network

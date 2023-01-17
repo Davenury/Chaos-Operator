@@ -1,4 +1,4 @@
-import { Box, Button, Dialog, DialogTitle, List, Typography, ListItem } from "@mui/material"
+import { Box, Button, Dialog, DialogTitle, List, Typography, ListItem, Card, CardContent } from "@mui/material"
 import {useState, useEffect} from "react"
 
 const firstParentId = "27c74670adb75075fad058d5ceaf7b20c4e7786c83bae8a32f626f9782af34c9a33c2046ef60fd2a7878d378e29fec851806bbd9a67878f3a9f1cda4830763fd"
@@ -60,7 +60,7 @@ const SimpleDialog = ({ open, changes, handleClose }) => {
         <Dialog open={open} onClose={handleClose}>
             <DialogTitle>Current Changes</DialogTitle>
             <List>
-                {changes.map(change => (
+                {[].concat(changes).reverse().map(change => (
                     <SingleChange change={change} key={change?.id ?? "0"} />
                 ))}
             </List>
@@ -71,8 +71,12 @@ const SimpleDialog = ({ open, changes, handleClose }) => {
 const SingleChange = ({ change }) => {
     return (
         <ListItem>
-            {change.userName}
-            {change.id}
+            <Card variant="outlined">
+                <CardContent>
+                    <Typography variant="h6">{change.userName}</Typography>
+                    <Typography variant="body2">{change.id}</Typography>
+                </CardContent>
+            </Card>
         </ListItem>
     )
 }
