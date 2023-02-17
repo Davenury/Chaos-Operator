@@ -31,13 +31,13 @@ dependencies {
 
     //operator
     implementation("io.javaoperatorsdk:operator-framework:${javaOperatorVersion}")
-    implementation("io.ktor:ktor-server-metrics-micrometer-jvm:2.1.3")
     annotationProcessor("io.javaoperatorsdk:operator-framework:${javaOperatorVersion}")
     annotationProcessor("io.fabric8:crd-generator-apt:5.4.0")
 
     // metrics
     implementation("io.ktor:ktor-server-metrics-micrometer:$ktor_version")
     implementation("io.micrometer:micrometer-registry-prometheus:1.10.4")
+    implementation("io.ktor:ktor-server-metrics-micrometer-jvm:2.1.3")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")

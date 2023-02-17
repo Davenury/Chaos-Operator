@@ -61,9 +61,11 @@ class ScenarioReconciler(
                     logger.info("Scheduling action in $scheduleIn")
                     return UpdateControl.updateStatus(scenario).rescheduleAfter(scheduleIn)
                 }
+                Metrics.bumpPhaseChange(scenarioName)
                 return UpdateControl.updateStatus(scenario.apply { it.status.status = ScenarioStatus.ScenarioStatus.COMPLETED })
             } catch (e: Exception) {
                 logger.error("Error while executing scenario phase", e)
+                Metrics.bumpProcessingError(scenario.metadata.name)
                 return UpdateControl.updateStatus(scenario.apply {
                     it.status?.status = ScenarioStatus.ScenarioStatus.ERROR
                     it.status?.errorMessage = "Error in operator. Contact devs. Error message: ${e.message}"
@@ -90,10 +92,6 @@ class ScenarioReconciler(
         }
 
         actions.clear()
-    }
-
-    private fun applyActions() {
-
     }
 
     companion object {
