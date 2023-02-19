@@ -68,7 +68,11 @@ data class ScaleDeploymentSpec(
 data class ScaleDeploymentPercentageSpec(
     val value: Int,
     val percentage: Int,
-    val labels: Map<String, String> = mapOf()
+    val labels: List<Label>
+)
+data class Label(
+    val key: String,
+    val value: String
 )
 
 data class NetworkIsolationSpec(

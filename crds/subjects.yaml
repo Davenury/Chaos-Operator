@@ -57,6 +57,7 @@ metadata:
   name: nginx-deployment1
   labels:
     app: nginx1
+    kind: nginx
 spec:
   replicas: 1
   selector:
@@ -80,6 +81,7 @@ metadata:
   name: nginx-deployment2
   labels:
     app: nginx2
+    kind: nginx
 spec:
   replicas: 1
   selector:
@@ -103,6 +105,7 @@ metadata:
   name: nginx-deployment3
   labels:
     app: nginx3
+    kind: nginx
 spec:
   replicas: 1
   selector:
@@ -126,6 +129,7 @@ metadata:
   name: nginx-deployment4
   labels:
     app: nginx4
+    kind: nginx
 spec:
   replicas: 1
   selector:

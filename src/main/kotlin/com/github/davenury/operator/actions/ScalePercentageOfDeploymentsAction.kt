@@ -16,7 +16,7 @@ class ScalePercentageOfDeploymentsAction(
     override fun applyAction(client: KubernetesClient) {
         // TODO - better assertions that spec is valid
         val deploymentsToScale = client.apps().deployments().inNamespace(spec.namespace).withLabels(
-            spec.scaleDeploymentPercentageSpec!!.labels
+            spec.scaleDeploymentPercentageSpec!!.labels.associate { it.key to it.value }
         ).list().items
         val numberToScale = deploymentsToScale.size * spec.scaleDeploymentPercentageSpec.percentage / 100
         deploymentsParameters = deploymentsToScale.shuffled().take(numberToScale).map {

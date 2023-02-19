@@ -12,4 +12,7 @@ spec:
          action: scale percentage
          scaleDeploymentPercentageSpec:
            value: 0
-           percentage: 50
+           percentage: 100
+           labels:
+             - key: kind
+               value: nginx
