@@ -21,7 +21,7 @@ You can also customize your deployment, by providing file with values. Given a f
 ```yaml
 namespace:
   name: chaos-operator    # namespace to deploy operator and samples, if applied
-  enable: true            # whether to create namespace
+  enabled: true            # whether to create namespace
 
 operator:
   deployment_name: chaos-operator         # name of deployment 
@@ -29,7 +29,7 @@ operator:
 
 serviceAccount:
   name: chaos-operator      # name of the service account
-  enable: true              # whether to create the service account
+  enabled: true              # whether to create the service account
   clusterRole:
     name: chaos-operator    # name of the cluster role
 

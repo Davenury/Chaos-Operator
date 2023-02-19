@@ -1,5 +1,5 @@
 namespace:
-  enable: false
+  enabled: false
 
 samples:
   deployment: false
