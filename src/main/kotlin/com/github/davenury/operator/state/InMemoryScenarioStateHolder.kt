@@ -19,11 +19,25 @@ class InMemoryScenarioStateHolder: ScenarioStateHolder {
     }
 
     override fun setError(name: ScenarioName) {
+        setStatus(name, ScenarioStatus.ScenarioStatus.ERROR)
+        clearScenario(name)
+    }
+
+    override fun setCompleted(name: ScenarioName) {
+        setStatus(name, ScenarioStatus.ScenarioStatus.COMPLETED)
+        clearScenario(name)
+    }
+
+    private fun setStatus(name: ScenarioName, status: ScenarioStatus.ScenarioStatus) {
         val current = scenarioStates[name]
 
         if (current != null) {
-            scenarioStates[name] = current.copy(status = ScenarioStatus.ScenarioStatus.ERROR)
+            scenarioStates[name] = current.copy(status = status)
         }
+    }
+
+    private fun clearScenario(name: ScenarioName) {
+        scenarioStates.remove(name)
     }
 
     private fun ScenarioState.next(): ScenarioState {

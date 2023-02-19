@@ -20,8 +20,6 @@ class Scenario: CustomResource<ScenarioSpec, ScenarioStatus>(), Namespaced {
     override fun toString(): String =
         "Scenario{spec=$spec, status=$status}"
 
-
-
     fun applyActions(phase: Int, client: KubernetesClient): List<Action> {
         val actions = this.spec.phases[phase].actions.map { spec ->
             Actions(spec).getAction(spec.resourceType, spec.action)
@@ -59,11 +57,18 @@ data class ActionSpec(
     val resourceName: String? = null,
     val action: String,
     val scaleDeploymentSpec: ScaleDeploymentSpec? = null,
+    val scaleDeploymentPercentageSpec: ScaleDeploymentPercentageSpec? = null,
     val networkIsolationSpec: NetworkIsolationSpec? = null,
 )
 
 data class ScaleDeploymentSpec(
     val value: Int
+)
+
+data class ScaleDeploymentPercentageSpec(
+    val value: Int,
+    val percentage: Int,
+    val labels: Map<String, String> = mapOf()
 )
 
 data class NetworkIsolationSpec(

@@ -1,50 +1,143 @@
+#apiVersion: apps/v1
+#kind: Deployment
+#metadata:
+#  name: subject
+#  namespace: operator-tryout
+#spec:
+#  selector:
+#    matchLabels:
+#      app: subject
+#  replicas: 1
+#  template:
+#    metadata:
+#      labels:
+#        app: subject
+#    spec:
+#      containers:
+#        - name: ubuntu
+#          image: ubuntu:latest
+#          # Just spin & wait forever
+#          command: [ "/bin/bash", "-c", "--" ]
+#          args: [ "while true; do sleep 30; done;" ]
+#
+#---
+#
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  name: my-service
+#  namespace: operator-tryout
+#spec:
+#  selector:
+#    app.kubernetes.io/name: MyApp
+#  ports:
+#    - protocol: TCP
+#      port: 80
+#      targetPort: 9376
+#
+#---
+#
+#apiVersion: v1
+#kind: Pod
+#metadata:
+#  name: nginx
+#  namespace: operator-tryout
+#spec:
+#  containers:
+#    - name: nginx
+#      image: nginx:1.14.2
+#      ports:
+#        - containerPort: 80
+#
+#---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: subject
-  namespace: operator-tryout
+  name: nginx-deployment1
+  labels:
+    app: nginx1
 spec:
+  replicas: 1
   selector:
     matchLabels:
-      app: subject
-  replicas: 1
+      app: nginx1
   template:
     metadata:
       labels:
-        app: subject
+        app: nginx1
     spec:
       containers:
-        - name: ubuntu
-          image: ubuntu:latest
-          # Just spin & wait forever
-          command: [ "/bin/bash", "-c", "--" ]
-          args: [ "while true; do sleep 30; done;" ]
-
+        - name: nginx
+          image: nginx:1.14.2
+          ports:
+            - containerPort: 80
 ---
 
-apiVersion: v1
-kind: Service
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: my-service
-  namespace: operator-tryout
+  name: nginx-deployment2
+  labels:
+    app: nginx2
 spec:
+  replicas: 1
   selector:
-    app.kubernetes.io/name: MyApp
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 9376
-
+    matchLabels:
+      app: nginx2
+  template:
+    metadata:
+      labels:
+        app: nginx2
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.14.2
+          ports:
+            - containerPort: 80
 ---
 
-apiVersion: v1
-kind: Pod
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: nginx
-  namespace: operator-tryout
+  name: nginx-deployment3
+  labels:
+    app: nginx3
 spec:
-  containers:
-    - name: nginx
-      image: nginx:1.14.2
-      ports:
-        - containerPort: 80
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx3
+  template:
+    metadata:
+      labels:
+        app: nginx3
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.14.2
+          ports:
+            - containerPort: 80
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment4
+  labels:
+    app: nginx4
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx4
+  template:
+    metadata:
+      labels:
+        app: nginx4
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.14.2
+          ports:
+            - containerPort: 80

@@ -6,6 +6,7 @@ import com.github.davenury.operator.ScenarioStatus
 interface ScenarioStateHolder {
     fun getScenarioState(name: ScenarioName): ScenarioState
     fun setError(name: ScenarioName)
+    fun setCompleted(name: ScenarioName)
 }
 
 data class ScenarioState(

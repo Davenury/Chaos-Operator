@@ -16,12 +16,17 @@ class ScenarioReconciler(
 
     override fun reconcile(scenario: Scenario?, context: Context<Scenario>?): UpdateControl<Scenario> {
         scenario?.let { scenario ->
-            logger.info(scenario.status.toString())
             val scenarioName = ScenarioName(scenario.metadata.name)
             try {
                 val scenarioState = stateHolder.getScenarioState(scenarioName)
+                scenario.status = ScenarioStatus().apply { this.status = scenarioState.status }
 
                 applyReverseActions(scenarioName)
+
+                if (scenarioState.phase == scenario.spec.phases.size) {
+                    stateHolder.setCompleted(scenarioName)
+                    return UpdateControl.updateStatus(scenario.apply { scenario.status.status = ScenarioStatus.ScenarioStatus.COMPLETED })
+                }
 
                 if (!scenarioState.isCompleted()) {
                     actions[scenarioName] = scenario.applyActions(scenarioState.phase, client)

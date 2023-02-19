@@ -49,6 +49,18 @@ spec:
                                   type: number
                               required:
                                 - value
+                            scaleDeploymentPercentageSpec:
+                              type: object
+                              properties:
+                                value:
+                                  type: number
+                                labels:
+                                  type: object
+                                percentage:
+                                  type: number
+                              required:
+                                - value
+                                - percentage
                             networkIsolationSpec:
                               type: object
                               properties:
