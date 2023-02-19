@@ -8,16 +8,16 @@ import io.micrometer.prometheus.PrometheusMeterRegistry
 object Metrics {
     val meterRegistry = PrometheusMeterRegistry(PrometheusConfig.DEFAULT)
 
-    fun bumpPhaseChange(scenarioName: String) {
+    fun bumpPhaseChange(scenarioName: ScenarioName) {
         Counter.builder("chaos_operator_phase_change")
-            .tag("scenario", scenarioName)
+            .tag("scenario", scenarioName.name)
             .register(meterRegistry)
             .increment()
     }
 
-    fun bumpProcessingError(scenarioName: String) {
+    fun bumpProcessingError(scenarioName: ScenarioName) {
         Counter.builder("chaos_operator_execution_error")
-            .tag("scenario", scenarioName)
+            .tag("scenario", scenarioName.name)
             .register(meterRegistry)
             .increment()
     }

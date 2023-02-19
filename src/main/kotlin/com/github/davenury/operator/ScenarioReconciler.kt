@@ -1,78 +1,59 @@
 package com.github.davenury.operator
 
 import com.github.davenury.operator.actions.Action
-import com.github.davenury.operator.actions.Actions
+import com.github.davenury.operator.state.ScenarioStateHolder
 import io.fabric8.kubernetes.client.KubernetesClient
 import io.javaoperatorsdk.operator.api.reconciler.*
 import org.slf4j.LoggerFactory
 
 @ControllerConfiguration
 class ScenarioReconciler(
-    private val client: KubernetesClient
+    private val client: KubernetesClient,
+    private val stateHolder: ScenarioStateHolder
 ) : Reconciler<Scenario>, ErrorStatusHandler<Scenario> {
 
-    private var scenarioStates: MutableMap<String, ScenarioState> = mutableMapOf()
-    private var actions: MutableList<Action> = mutableListOf()
+    private var actions: MutableMap<ScenarioName, List<Action>> = mutableMapOf()
 
     override fun reconcile(scenario: Scenario?, context: Context<Scenario>?): UpdateControl<Scenario> {
-        scenario?.let {
-            it.status = ScenarioStatus()
-            logger.info("$scenario")
+        scenario?.let { scenario ->
+            val scenarioName = ScenarioName(scenario.metadata.name)
             try {
-                val scenarioName = scenario.metadata.name
+                val scenarioState = stateHolder.getScenarioState(scenarioName)
+                scenario.status = ScenarioStatus().apply { this.status = scenarioState.status }
 
-                val counter = if (scenarioStates.containsKey(scenarioName)) {
-                    scenario.status?.status = ScenarioStatus.ScenarioStatus.IN_PROGRESS
-                    scenarioStates[scenarioName]!!.counter + 1
-                } else {
-                    scenarioStates[scenarioName] = ScenarioState(0, false)
-                    scenario.status?.status = ScenarioStatus.ScenarioStatus.NEW
-                    0
-                }
-                logger.info("Beginning phase $counter")
+                applyReverseActions(scenarioName)
 
-                applyReverseActions()
-                
-                if (scenarioStates[scenarioName]!!.counter < scenario.spec.phases.size - 1) {
-                    scenarioStates[scenarioName] = ScenarioState(counter, false)
-                } else {
-                    logger.info("Scenario $scenarioName is completed")
-                    scenario.status?.status = ScenarioStatus.ScenarioStatus.COMPLETED
-                    scenarioStates[scenarioName] = ScenarioState(counter, true)
+                if (scenarioState.phase == scenario.spec.phases.size) {
+                    stateHolder.setCompleted(scenarioName)
+                    return UpdateControl.updateStatus(scenario.apply { scenario.status.status = ScenarioStatus.ScenarioStatus.COMPLETED })
                 }
 
-                if (!scenarioStates[scenarioName]!!.completed) {
-                    scenario.spec.phases[counter].actions.forEach { spec ->
-                        val action = Actions(spec).getAction(spec.resourceType, spec.action) ?: kotlin.run {
-                            val message = "Action for ${spec.action} ${spec.resourceType} is not found, skipping"
-                            logger.error(message)
-                            return UpdateControl.updateStatus(scenario.apply {
-                                it.status?.status = ScenarioStatus.ScenarioStatus.ERROR
-                                it.status?.errorMessage = message
-                            })
-                        }
+                if (!scenarioState.isCompleted()) {
+                    actions[scenarioName] = scenario.applyActions(scenarioState.phase, client)
 
-                        logger.info("Applying action ${action.getName()}")
-                        action.applyAction(client)
-                        actions.add(action)
-                    }
+                    val scheduleIn = scenario.getDurationOfPhase(scenarioState.phase)
 
-                    val scheduleIn = scenario.spec.phases[counter].duration
                     logger.info("Scheduling action in $scheduleIn")
                     return UpdateControl.updateStatus(scenario).rescheduleAfter(scheduleIn)
                 }
+
                 Metrics.bumpPhaseChange(scenarioName)
-                return UpdateControl.updateStatus(scenario.apply { it.status.status = ScenarioStatus.ScenarioStatus.COMPLETED })
+                return UpdateControl.updateStatus(scenario.apply { scenario.status.status = scenarioState.status })
             } catch (e: Exception) {
-                logger.error("Error while executing scenario phase", e)
-                Metrics.bumpProcessingError(scenario.metadata.name)
-                return UpdateControl.updateStatus(scenario.apply {
-                    it.status?.status = ScenarioStatus.ScenarioStatus.ERROR
-                    it.status?.errorMessage = "Error in operator. Contact devs. Error message: ${e.message}"
-                })
+                return onError(e, scenarioName, scenario)
             }
         }
         return UpdateControl.updateStatus(scenario)
+    }
+
+    private fun onError(e: Exception, scenarioName: ScenarioName, scenario: Scenario): UpdateControl<Scenario> {
+        logger.error("Error while executing scenario phase", e)
+        stateHolder.setError(scenarioName)
+        Metrics.bumpProcessingError(scenarioName)
+        return UpdateControl.updateStatus(scenario.apply {
+            scenario.status?.status = ScenarioStatus.ScenarioStatus.ERROR
+            scenario.status?.errorMessage = "Error in operator. Contact devs. Error message: ${e.message}"
+        })
     }
 
     override fun updateErrorStatus(
@@ -85,21 +66,14 @@ class ScenarioReconciler(
         return ErrorStatusUpdateControl.updateStatus(scenario)
     }
 
-    private fun applyReverseActions() {
-        actions.forEach {
+    private fun applyReverseActions(scenarioName: ScenarioName) {
+        actions[scenarioName]?.forEach {
             logger.info("Executing reverse action for ${it.getName()}")
             it.reverseAction(client)
         }
-
-        actions.clear()
     }
 
     companion object {
         private val logger = LoggerFactory.getLogger("ScenarioReconciler")
     }
 }
-
-data class ScenarioState(
-    var counter: Int,
-    var completed: Boolean
-)

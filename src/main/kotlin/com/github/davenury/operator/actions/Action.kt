@@ -16,7 +16,13 @@ class Actions(
 ) {
 
     private val actions: List<Action> =
-        listOf(ScaleDeploymentAction(spec), DeletePodAction(spec), DeleteServiceAction(spec), NetworkIsolation(spec))
+        listOf(
+            ScaleDeploymentAction(spec),
+            DeletePodAction(spec),
+            DeleteServiceAction(spec),
+            NetworkIsolation(spec),
+            ScalePercentageOfDeploymentsAction(spec)
+        )
 
     fun getAction(resourceType: String, verb: String): Action? {
         return actions.find {

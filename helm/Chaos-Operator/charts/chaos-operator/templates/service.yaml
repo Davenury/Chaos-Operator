@@ -1,0 +1,14 @@
+{{ if .Values.service.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.service.name | default "chaos-operator-service" }}
+  namespace: {{ .Values.namespace.name | default "default" }}
+spec:
+  selector:
+    app: chaos-operator
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+{{ end }}

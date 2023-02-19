@@ -1,12 +1,17 @@
 package com.github.davenury.operator
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
+import com.github.davenury.operator.actions.Action
+import com.github.davenury.operator.actions.Actions
+import com.github.davenury.operator.state.ScenarioState
 import io.fabric8.kubernetes.api.model.KubernetesResource
 import io.fabric8.kubernetes.api.model.Namespaced
 import io.fabric8.kubernetes.client.CustomResource
+import io.fabric8.kubernetes.client.KubernetesClient
 import io.fabric8.kubernetes.model.annotation.Group
 import io.fabric8.kubernetes.model.annotation.Version
 import io.javaoperatorsdk.operator.api.ObservedGenerationAwareStatus
+import org.slf4j.LoggerFactory
 import java.time.Duration
 
 @Group("lsc.davenury.github.com")
@@ -14,6 +19,24 @@ import java.time.Duration
 class Scenario: CustomResource<ScenarioSpec, ScenarioStatus>(), Namespaced {
     override fun toString(): String =
         "Scenario{spec=$spec, status=$status}"
+
+    fun applyActions(phase: Int, client: KubernetesClient): List<Action> {
+        val actions = this.spec.phases[phase].actions.map { spec ->
+            Actions(spec).getAction(spec.resourceType, spec.action)
+                .also {
+                    it?.applyAction(client) ?: kotlin.run {
+                        logger.warn("Action ${spec.action} ${spec.resourceType} not found, skipping")
+                    }
+                }
+            }
+        return actions.filterNotNull()
+    }
+
+    fun getDurationOfPhase(phase: Int) = this.spec.phases[phase].duration
+
+    companion object {
+        private val logger = LoggerFactory.getLogger("Scenario")
+    }
 }
 
 @JsonDeserialize
@@ -34,11 +57,22 @@ data class ActionSpec(
     val resourceName: String? = null,
     val action: String,
     val scaleDeploymentSpec: ScaleDeploymentSpec? = null,
+    val scaleDeploymentPercentageSpec: ScaleDeploymentPercentageSpec? = null,
     val networkIsolationSpec: NetworkIsolationSpec? = null,
 )
 
 data class ScaleDeploymentSpec(
     val value: Int
+)
+
+data class ScaleDeploymentPercentageSpec(
+    val value: Int,
+    val percentage: Int,
+    val labels: List<Label>
+)
+data class Label(
+    val key: String,
+    val value: String
 )
 
 data class NetworkIsolationSpec(
@@ -57,6 +91,18 @@ class ScenarioStatus: ObservedGenerationAwareStatus(), KubernetesResource {
         "ScenarioStatus{errorMessage=$errorMessage,status=${status.name}}"
 
     enum class ScenarioStatus {
-        NEW, IN_PROGRESS, COMPLETED, ERROR
+        NEW {
+            override fun next(): ScenarioStatus = IN_PROGRESS
+        }, IN_PROGRESS {
+            override fun next(): ScenarioStatus = COMPLETED
+        }, COMPLETED {
+            override fun next(): ScenarioStatus = COMPLETED
+        }, ERROR {
+            override fun next(): ScenarioStatus = ERROR
+        };
+
+        abstract fun next(): ScenarioStatus
     }
 }
+
+data class ScenarioName(val name: String)

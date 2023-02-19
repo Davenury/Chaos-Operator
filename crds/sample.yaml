@@ -2,25 +2,17 @@ apiVersion: lsc.davenury.github.com/v1
 kind: Scenario
 metadata:
   name: new-scenario
-  namespace: chaos-operator
+  namespace: default
 spec:
   phases:
     - duration: PT30S
       actions:
-       - namespace: chaos-operator
+       - namespace: default
          resourceType: deployment
-         resourceName: peerset0-peer3-dep
-         action: scale
-         scaleDeploymentSpec:
+         action: scale percentage
+         scaleDeploymentPercentageSpec:
            value: 0
-    - duration: PT1M
-      actions:
-        - namespace: chaos-operator
-          resourceType: network
-          action: isolate
-          networkIsolationSpec:
-            labelKey: app.name
-            operator: In
-            values:
-              - peer2-peerset0-app
-              - peer1-peerset0-app
+           percentage: 100
+           labels:
+             - key: kind
+               value: nginx

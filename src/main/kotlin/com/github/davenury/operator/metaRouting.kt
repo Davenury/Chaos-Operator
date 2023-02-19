@@ -3,7 +3,6 @@ package com.github.davenury.operator
 import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import meterRegistry
 
 fun Routing.metaRouting() {
 
@@ -12,7 +11,7 @@ fun Routing.metaRouting() {
     }
 
     get("/metrics") {
-        call.respond(meterRegistry.scrape())
+        call.respond(Metrics.meterRegistry.scrape())
     }
 
 }
