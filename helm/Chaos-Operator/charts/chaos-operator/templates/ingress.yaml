@@ -1,0 +1,19 @@
+{{ if .Values.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Values.ingress.name | default "chaos-operator-ingress" }}
+  namespace: {{ .Values.namespace.name | default "chaos-operator" }}
+spec:
+  ingressClassName: {{ .Values.ingress.ingressClass | default "nginx" }}
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.service.name | default "chaos-operator-service" }}
+                port:
+                  number: 80
+{{ end }}

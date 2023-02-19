@@ -1,13 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-{{ if .Values.operator }}
   name: {{ .Values.operator.deployment_name | default "chaos-operator" }}
   namespace: {{ .Values.namespace.name | default "default" }}
-{{ else }}
-  name: "chaos-operator"
-  namespace: default
-{{ end }}
 spec:
   selector:
     matchLabels:
@@ -18,18 +13,10 @@ spec:
       labels:
         app: chaos-operator
     spec:
-      {{ if .Values.serviceAccount }}
-      serviceAccountName: {{ .Values.serviceAccount.name }}
-      {{ else }}
-      serviceAccountName: chaos-operator
-      {{ end }}
+      serviceAccountName: {{ .Values.serviceAccount.name | default "chaos-operator" }}
       containers:
         - name: operator
-          {{ if .Values.operator }}
           image: {{ .Values.operator.image | default "ghcr.io/davenury/chaos-operator:latest" }}
-          {{ else }}
-          image: ghcr.io/davenury/chaos-operator:latest
-          {{ end }}
           imagePullPolicy: Always
           ports:
             - containerPort: 80

@@ -1,0 +1,27 @@
+namespace:
+  name: chaos-operator
+  enabled: true
+
+operator:
+  deployment_name: chaos-operator
+  image: ghcr.io/davenury/chaos-operator:latest
+
+serviceAccount:
+  name: chaos-operator
+  enabled: true
+  clusterRole:
+    name: chaos-operator
+
+service:
+  enabled: true
+  name: chaos-operator-service
+
+ingress:
+  enabled: true
+  ingressClass: nginx
+  name: chaos-operator-ingress
+
+samples:
+  deployment: false
+  single_pod: false
+  service: false
