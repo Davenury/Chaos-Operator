@@ -10,13 +10,13 @@ import io.fabric8.kubernetes.api.model.networking.v1.NetworkPolicyPeerBuilder
 import io.fabric8.kubernetes.client.KubernetesClient
 import java.util.UUID
 
+@RegisterAction(
+    resourceType = "network",
+    verb = "isolate"
+)
 class NetworkIsolation(
     private val spec: ActionSpec
 ): Action {
-    override val resourceType: String
-        get() = "network"
-    override val verb: String
-        get() = "isolate"
 
     private val networkPolicyName = "network-policy-${UUID.randomUUID()}"
     override fun applyAction(client: KubernetesClient) {

@@ -22,7 +22,7 @@ class Scenario: CustomResource<ScenarioSpec, ScenarioStatus>(), Namespaced {
 
     fun applyActions(phase: Int, client: KubernetesClient): List<Action> {
         val actions = this.spec.phases[phase].actions.map { spec ->
-            Actions(spec).getAction(spec.resourceType, spec.action)
+            Actions.getAction(spec)
                 .also {
                     it?.applyAction(client) ?: kotlin.run {
                         logger.warn("Action ${spec.action} ${spec.resourceType} not found, skipping")
@@ -68,7 +68,7 @@ data class ScaleDeploymentSpec(
 data class ScaleDeploymentPercentageSpec(
     val value: Int,
     val percentage: Int,
-    val labels: List<Label>
+    val labels: List<Label> = listOf()
 )
 data class Label(
     val key: String,

@@ -2,17 +2,14 @@ apiVersion: lsc.davenury.github.com/v1
 kind: Scenario
 metadata:
   name: new-scenario
-  namespace: default
+  namespace: ddebowski
 spec:
   phases:
     - duration: PT30S
       actions:
-       - namespace: default
+       - namespace: ddebowski
          resourceType: deployment
          action: scale percentage
          scaleDeploymentPercentageSpec:
            value: 0
            percentage: 100
-           labels:
-             - key: kind
-               value: nginx

@@ -39,6 +39,9 @@ dependencies {
     implementation("io.micrometer:micrometer-registry-prometheus:1.10.4")
     implementation("io.ktor:ktor-server-metrics-micrometer-jvm:2.1.3")
 
+    // reflections
+    implementation("org.reflections:reflections:0.10.2")
+
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 }
