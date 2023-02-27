@@ -4,13 +4,13 @@ import com.github.davenury.operator.ActionSpec
 import io.fabric8.kubernetes.api.model.Service
 import io.fabric8.kubernetes.client.KubernetesClient
 
+@RegisterAction(
+    resourceType = "service",
+    verb = "delete"
+)
 class DeleteServiceAction(
     private val spec: ActionSpec
 ): Action {
-    override val resourceType: String
-        get() = "service"
-    override val verb: String
-        get() = "delete"
 
     private lateinit var serviceSpec: Service
 

@@ -4,14 +4,13 @@ import com.github.davenury.operator.ActionSpec
 import io.fabric8.kubernetes.api.model.Pod
 import io.fabric8.kubernetes.client.KubernetesClient
 
+@RegisterAction(
+    resourceType = "pod",
+    verb = "delete"
+)
 class DeletePodAction(
     private val spec: ActionSpec
 ): Action {
-
-    override val resourceType: String
-        get() = "pod"
-    override val verb: String
-        get() = "delete"
 
     private lateinit var podSpec: Pod
 

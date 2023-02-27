@@ -1,8 +1,13 @@
 package com.github.davenury.operator
 
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import com.fasterxml.jackson.module.paramnames.ParameterNamesModule
 import com.github.davenury.operator.actions.Action
 import com.github.davenury.operator.state.ScenarioStateHolder
 import io.fabric8.kubernetes.client.KubernetesClient
+import io.fabric8.kubernetes.client.utils.Serialization
 import io.javaoperatorsdk.operator.api.reconciler.*
 import org.slf4j.LoggerFactory
 
@@ -11,6 +16,12 @@ class ScenarioReconciler(
     private val client: KubernetesClient,
     private val stateHolder: ScenarioStateHolder
 ) : Reconciler<Scenario>, ErrorStatusHandler<Scenario> {
+
+    init {
+        Serialization.jsonMapper().registerKotlinModule()
+            .registerModules(JavaTimeModule(), Jdk8Module(), ParameterNamesModule())
+
+    }
 
     private var actions: MutableMap<ScenarioName, List<Action>> = mutableMapOf()
 

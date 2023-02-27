@@ -1,9 +1,9 @@
 package com.github.davenury.operator
 
+import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.github.davenury.operator.actions.Action
 import com.github.davenury.operator.actions.Actions
-import com.github.davenury.operator.state.ScenarioState
 import io.fabric8.kubernetes.api.model.KubernetesResource
 import io.fabric8.kubernetes.api.model.Namespaced
 import io.fabric8.kubernetes.client.CustomResource
@@ -22,7 +22,7 @@ class Scenario: CustomResource<ScenarioSpec, ScenarioStatus>(), Namespaced {
 
     fun applyActions(phase: Int, client: KubernetesClient): List<Action> {
         val actions = this.spec.phases[phase].actions.map { spec ->
-            Actions(spec).getAction(spec.resourceType, spec.action)
+            Actions.getAction(spec)
                 .also {
                     it?.applyAction(client) ?: kotlin.run {
                         logger.warn("Action ${spec.action} ${spec.resourceType} not found, skipping")
@@ -42,11 +42,12 @@ class Scenario: CustomResource<ScenarioSpec, ScenarioStatus>(), Namespaced {
 @JsonDeserialize
 data class ScenarioSpec(
     val phases: List<Phase>
-): KubernetesResource
+)
 
 @JsonDeserialize
 data class Phase(
     val actions: List<ActionSpec>,
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     val duration: Duration
 )
 
@@ -61,20 +62,24 @@ data class ActionSpec(
     val networkIsolationSpec: NetworkIsolationSpec? = null,
 )
 
+@JsonDeserialize
 data class ScaleDeploymentSpec(
     val value: Int
 )
 
+@JsonDeserialize
 data class ScaleDeploymentPercentageSpec(
     val value: Int,
     val percentage: Int,
-    val labels: List<Label>
+    val labels: List<Label> = listOf()
 )
+@JsonDeserialize
 data class Label(
     val key: String,
     val value: String
 )
 
+@JsonDeserialize
 data class NetworkIsolationSpec(
     val labelKey: String,
     val operator: String,
