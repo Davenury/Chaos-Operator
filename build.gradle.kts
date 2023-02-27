@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.cli.jvm.main
+
 plugins {
     kotlin("jvm") version "1.7.10"
     java
@@ -18,6 +20,11 @@ repositories {
     mavenCentral()
 }
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
 dependencies {
     implementation(kotlin("stdlib"))
 
@@ -28,11 +35,14 @@ dependencies {
     implementation("io.ktor:ktor-server-netty-jvm:$ktor_version")
 
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.14.0")
+    implementation("com.fasterxml.jackson.module:jackson-module-parameter-names:2.14.0")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.0")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.14.0")
 
     //operator
     implementation("io.javaoperatorsdk:operator-framework:${javaOperatorVersion}")
     annotationProcessor("io.javaoperatorsdk:operator-framework:${javaOperatorVersion}")
-    annotationProcessor("io.fabric8:crd-generator-apt:5.4.0")
+    annotationProcessor("io.fabric8:crd-generator-apt:6.4.1")
 
     // metrics
     implementation("io.ktor:ktor-server-metrics-micrometer:$ktor_version")
@@ -43,6 +53,8 @@ dependencies {
     implementation("org.reflections:reflections:0.10.2")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.0")
+    testImplementation("io.javaoperatorsdk:operator-framework-junit-5:4.2.7")
+    testImplementation("org.awaitility:awaitility-kotlin:4.2.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 }
 
