@@ -25,7 +25,7 @@ class DeleteConsensusLeader(
             logger.error("Could not find consensus leader")
             return
         }
-        val deployments = getDeployment(client, leaderId, peersetId, spec.namespace)
+        val deployments = getDeployment(client, leaderId, peersetId)
         if (deployments.isEmpty()) {
             logger.error("There's no deployment with consensus leader - peersetId: ${peersetId.value}, leader peerId: ${leaderId.value}")
             return
@@ -49,7 +49,7 @@ class DeleteConsensusLeader(
 
     override fun getName(): String = "Delete consensus leader"
 
-    private fun getDeployment(client: KubernetesClient, peerId: PeerId, peersetId: PeersetId, namespace: String) =
+    private fun getDeployment(client: KubernetesClient, peerId: PeerId, peersetId: PeersetId) =
         client.apps().deployments().inNamespace(spec.namespace)
             .withLabel("peerId", peerId.value.toString())
             .withLabel("peersetId", peersetId.value.toString())
