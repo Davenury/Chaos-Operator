@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory
 
 @RegisterAction(
     resourceType = "consensus follower",
-    verb = "scale count"
+    verb = "delete count"
 )
 class DeleteConsensusFollowerCount(
     private val spec: ActionSpec
