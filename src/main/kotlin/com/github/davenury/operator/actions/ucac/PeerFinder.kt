@@ -1,5 +1,6 @@
 package com.github.davenury.operator.actions.ucac
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.github.davenury.operator.httpClient
 import io.fabric8.kubernetes.client.KubernetesClient
 import io.ktor.client.call.*
@@ -37,6 +38,7 @@ class PeerFinderImplementation : PeerFinder {
             }
         }
 
+    @JsonDeserialize
     private data class CurrentLeaderResponse(val currentLeaderPeerId: Int?)
 
     companion object {
