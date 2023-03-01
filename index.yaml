@@ -2,10 +2,17 @@ apiVersion: v1
 entries:
   chaos-operator:
   - apiVersion: v1
-    created: "2023-02-20T08:02:22.238046767+01:00"
+    created: "2023-03-01T17:11:07.358459566+01:00"
+    digest: 5e996ea081a48baedc90265dee7e9e232ea50ec01573df06abf88378786e637e
+    name: chaos-operator
+    urls:
+    - https://davenury.github.io/Chaos-Operator/chaos-operator-1.0.1.tgz
+    version: 1.0.1
+  - apiVersion: v1
+    created: "2023-03-01T17:11:07.358054829+01:00"
     digest: 4883e01ef4da6470b8ee3fd0824aeb58072cdb515e0f09368ab34ea073a66009
     name: chaos-operator
     urls:
     - https://davenury.github.io/Chaos-Operator/chaos-operator-1.0.0.tgz
     version: 1.0.0
-generated: "2023-02-20T08:02:22.237784793+01:00"
+generated: "2023-03-01T17:11:07.352066949+01:00"

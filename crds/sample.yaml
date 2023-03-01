@@ -5,11 +5,10 @@ metadata:
   namespace: ddebowski
 spec:
   phases:
-    - duration: PT30S
+    - duration: PT1M
       actions:
        - namespace: ddebowski
-         resourceType: deployment
-         action: scale percentage
-         scaleDeploymentPercentageSpec:
-           value: 0
-           percentage: 100
+         resourceType: consensus leader
+         action: delete
+         deleteConsensusLeaderSpec:
+           peersetId: 0

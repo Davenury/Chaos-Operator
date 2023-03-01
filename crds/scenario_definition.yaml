@@ -42,6 +42,13 @@ spec:
                               type: string
                             action:
                               type: string
+                            deleteConsensusLeaderSpec:
+                              type: object
+                              properties:
+                                peersetId:
+                                  type: number
+                              required:
+                                - peersetId
                             scaleDeploymentSpec:
                               type: object
                               properties:

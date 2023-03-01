@@ -3,10 +3,9 @@ package com.github.davenury.operator.actions
 import com.github.davenury.operator.ActionSpec
 import io.fabric8.kubernetes.client.KubernetesClient
 
-const val DEPLOYMENT = "deployment"
 
 @RegisterAction(
-    resourceType = DEPLOYMENT,
+    resourceType = "deployment",
     verb = "scale percentage"
 )
 class ScalePercentageOfDeploymentsAction(
@@ -16,7 +15,6 @@ class ScalePercentageOfDeploymentsAction(
     private var deploymentsParameters: List<DeploymentParameters> = mutableListOf()
 
     override fun applyAction(client: KubernetesClient) {
-        // TODO - better assertions that spec is valid
         val deploymentsToScale = client.apps().deployments().inNamespace(spec.namespace).withLabels(
             spec.scaleDeploymentPercentageSpec!!.labels.associate { it.key to it.value }
         ).list().items

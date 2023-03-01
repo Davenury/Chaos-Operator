@@ -2,6 +2,9 @@ namespace:
   name: chaos-operator
   enabled: true
 
+crd:
+  enabled: true
+
 operator:
   deployment_name: chaos-operator
   image: ghcr.io/davenury/chaos-operator:latest

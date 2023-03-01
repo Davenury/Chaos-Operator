@@ -55,11 +55,17 @@ data class Phase(
 data class ActionSpec(
     val namespace: String,
     val resourceType: String,
-    val resourceName: String? = null,
     val action: String,
+    val resourceName: String? = null,
     val scaleDeploymentSpec: ScaleDeploymentSpec? = null,
     val scaleDeploymentPercentageSpec: ScaleDeploymentPercentageSpec? = null,
     val networkIsolationSpec: NetworkIsolationSpec? = null,
+    val deleteConsensusLeaderSpec: DeleteConsensusLeaderSpec? = null,
+)
+
+@JsonDeserialize
+data class DeleteConsensusLeaderSpec(
+    val peersetId: Int
 )
 
 @JsonDeserialize
