@@ -42,6 +42,33 @@ spec:
                               type: string
                             action:
                               type: string
+                            deleteConsensusFollowerPercentageSpec:
+                              type: object
+                              properties:
+                                  peersetId:
+                                    type: number
+                                  percentage:
+                                    type: number
+                              required:
+                                - peersetId
+                                - percentage
+                            deleteConsensusFollowerCountSpec:
+                              type: object
+                              properties:
+                                peersetId:
+                                  type: number
+                                count:
+                                  type: number
+                              required:
+                                - peersetId
+                                - count
+                            deleteConsensusLeaderSpec:
+                              type: object
+                              properties:
+                                peersetId:
+                                  type: number
+                              required:
+                                - peersetId
                             scaleDeploymentSpec:
                               type: object
                               properties:

@@ -34,6 +34,11 @@ dependencies {
     implementation("io.ktor:ktor-server-core-jvm:$ktor_version")
     implementation("io.ktor:ktor-server-netty-jvm:$ktor_version")
 
+    implementation("io.ktor:ktor-client-core:$ktor_version")
+    implementation("io.ktor:ktor-client-okhttp:$ktor_version")
+    implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
+    implementation("io.ktor:ktor-serialization-jackson:$ktor_version")
+
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.14.0")
     implementation("com.fasterxml.jackson.module:jackson-module-parameter-names:2.14.0")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.0")
@@ -41,6 +46,8 @@ dependencies {
 
     //operator
     implementation("io.javaoperatorsdk:operator-framework:${javaOperatorVersion}")
+    implementation("io.ktor:ktor-client-content-negotiation:2.1.3")
+    implementation("io.ktor:ktor-serialization-jackson:2.1.3")
     annotationProcessor("io.javaoperatorsdk:operator-framework:${javaOperatorVersion}")
     annotationProcessor("io.fabric8:crd-generator-apt:6.4.1")
 

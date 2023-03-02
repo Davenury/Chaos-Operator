@@ -1,15 +1,15 @@
 apiVersion: lsc.davenury.github.com/v1
 kind: Scenario
 metadata:
-  name: new-scenario
+  name: new-scenario2
   namespace: ddebowski
 spec:
   phases:
-    - duration: PT30S
+    - duration: PT1M
       actions:
        - namespace: ddebowski
-         resourceType: deployment
-         action: scale percentage
-         scaleDeploymentPercentageSpec:
-           value: 0
-           percentage: 100
+         resourceType: consensus follower
+         action: delete count
+         deleteConsensusFollowerCountSpec:
+           peersetId: 0
+           count: 1

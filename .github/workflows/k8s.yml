@@ -50,6 +50,6 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          push: false # todo - change with some code changes
+          push: true
           file: Dockerfile
           tags: ${{env.REGISTRY}}/davenury/chaos-operator:latest

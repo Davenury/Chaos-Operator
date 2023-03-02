@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.github.davenury.operator.actions.Action
 import com.github.davenury.operator.actions.Actions
+import com.github.davenury.operator.actions.ucac.DeleteConsensusFollowerPercentage
 import io.fabric8.kubernetes.api.model.KubernetesResource
 import io.fabric8.kubernetes.api.model.Namespaced
 import io.fabric8.kubernetes.client.CustomResource
@@ -55,11 +56,31 @@ data class Phase(
 data class ActionSpec(
     val namespace: String,
     val resourceType: String,
-    val resourceName: String? = null,
     val action: String,
+    val resourceName: String? = null,
     val scaleDeploymentSpec: ScaleDeploymentSpec? = null,
     val scaleDeploymentPercentageSpec: ScaleDeploymentPercentageSpec? = null,
     val networkIsolationSpec: NetworkIsolationSpec? = null,
+    val deleteConsensusLeaderSpec: DeleteConsensusLeaderSpec? = null,
+    val deleteConsensusFollowerPercentageSpec: DeleteConsensusFollowerPercentageSpec? = null,
+    val deleteConsensusFollowerCountSpec: DeleteConsensusFollowerCountSpec? = null,
+)
+
+@JsonDeserialize
+data class DeleteConsensusFollowerCountSpec(
+    val peersetId: Int,
+    val count: Int
+)
+
+@JsonDeserialize
+data class DeleteConsensusFollowerPercentageSpec(
+    val peersetId: Int,
+    val percentage: Int
+)
+
+@JsonDeserialize
+data class DeleteConsensusLeaderSpec(
+    val peersetId: Int
 )
 
 @JsonDeserialize
