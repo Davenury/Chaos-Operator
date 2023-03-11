@@ -8,6 +8,9 @@ crd:
 operator:
   deployment_name: chaos-operator
   image: ghcr.io/davenury/chaos-operator:latest
+  metrics:
+    enabled: true
+  annotations: {}
 
 serviceAccount:
   name: chaos-operator
