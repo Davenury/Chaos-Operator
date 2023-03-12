@@ -6,8 +6,8 @@ metadata:
   {{ if .Values.operator.metrics.enabled }}
   annotations:
     prometheus.io/path: /metrics
-    prometheus.io/port: 8080
-    prometheus.io/scrape: true
+    prometheus.io/port: "8080"
+    prometheus.io/scrape: "true"
   {{ if .Values.operator.annotations }}
   {{- range $key, $value := .Values.operator.annotations }}
     {{$key}}: {{$value}}
@@ -21,6 +21,17 @@ spec:
   replicas: 1
   template:
     metadata:
+      {{ if .Values.operator.metrics.enabled }}
+      annotations:
+        prometheus.io/path: /metrics
+        prometheus.io/port: "8080"
+        prometheus.io/scrape: "true"
+      {{ if .Values.operator.annotations }}
+      {{- range $key, $value := .Values.operator.annotations }}
+      {{$key}}: {{$value}}
+      {{- end }}
+      {{ end }}
+      {{ end }}
       labels:
         app: chaos-operator
     spec:
