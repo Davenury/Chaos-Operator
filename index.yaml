@@ -6,20 +6,20 @@ entries:
       digest: 67c2d811371775b2b809b411966aa44210d8862dd705fa84f2d751762209aaac
       name: chaos-operator
       urls:
-        - https://davenury.github.io/Chaos-Operator/chaos-operator-1.0.2.tgz
+        - https://davenury.github.io/Chaos-Operator/charts/chaos-operator/chaos-operator-1.0.2.tgz
       version: 1.0.2
     - apiVersion: v1
       created: "2023-03-12T00:18:53.33020407+01:00"
       digest: 581b5f842ab86235d12a271570e8491db33ddd12696fc141a0b21f666f8a1e1d
       name: chaos-operator
       urls:
-        - https://davenury.github.io/Chaos-Operator/chaos-operator-1.0.1.tgz
+        - https://davenury.github.io/Chaos-Operator/charts/chaos-operator/chaos-operator-1.0.1.tgz
       version: 1.0.1
     - apiVersion: v1
       created: "2023-03-12T00:18:53.329999156+01:00"
       digest: 4883e01ef4da6470b8ee3fd0824aeb58072cdb515e0f09368ab34ea073a66009
       name: chaos-operator
       urls:
-        - https://davenury.github.io/Chaos-Operator/chaos-operator-1.0.0.tgz
+        - https://davenury.github.io/Chaos-Operator/charts/chaos-operator/chaos-operator-1.0.0.tgz
       version: 1.0.0
 generated: "2023-03-12T00:18:53.329696628+01:00"
