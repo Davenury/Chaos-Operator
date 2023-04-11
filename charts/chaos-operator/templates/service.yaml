@@ -4,11 +4,14 @@ kind: Service
 metadata:
   name: {{ .Values.service.name | default "chaos-operator-service" }}
   namespace: {{ .Values.namespace.name | default "default" }}
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "8080"
 spec:
   selector:
     app: chaos-operator
   ports:
     - protocol: TCP
-      port: 80
+      port: 8080
       targetPort: 8080
 {{ end }}

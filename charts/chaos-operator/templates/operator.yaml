@@ -41,7 +41,7 @@ spec:
           image: {{ .Values.operator.image | default "ghcr.io/davenury/chaos-operator:latest" }}
           imagePullPolicy: Always
           ports:
-            - containerPort: 80
+            - containerPort: 8080
           readinessProbe:
             httpGet:
               path: /health
