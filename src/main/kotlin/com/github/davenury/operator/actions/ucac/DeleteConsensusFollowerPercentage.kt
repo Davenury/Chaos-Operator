@@ -19,14 +19,18 @@ class DeleteConsensusFollowerPercentage(
     private val scaleDeploymentActions: MutableList<ScaleDeploymentAction> = mutableListOf()
 
     override fun applyAction(client: KubernetesClient) {
-        val peersetId = PeersetId(spec.deleteConsensusFollowerPercentageSpec!!.peersetId)
-        val leaderId = PeerFinder.create().findConsensusLeader(peersetId, spec.namespace) ?: kotlin.run {
-            logger.error("Could not find consensus leader")
-            return
-        }
+        val peersetInformation =
+            PeerFinder.create().findConsensusLeader(spec.deleteConsensusFollowerPercentageSpec!!.peerUrl)
+                ?: kotlin.run {
+                    logger.error("Could not find consensus leader")
+                    return
+                }
 
-        val deployments =
-            getDeployments(client, peersetId).filter { it.metadata.labels["peerId"] != leaderId.value.toString() }
+        val peersInPeerset = peersetInformation.peersInPeerset
+
+        val deployments = peersInPeerset.mapNotNull { getDeployment(client, it).getOrNull(0) }
+            .filter { it.metadata?.labels?.get("peerId") != peersetInformation.currentConsensusLeader?.value }
+
         deployments
             .shuffled()
             .take((deployments.size * spec.deleteConsensusFollowerPercentageSpec.percentage) / 100)
@@ -49,9 +53,9 @@ class DeleteConsensusFollowerPercentage(
         scaleDeploymentActions.forEach { it.reverseAction(client) }
     }
 
-    private fun getDeployments(client: KubernetesClient, peersetId: PeersetId) =
+    private fun getDeployment(client: KubernetesClient, peerId: PeerId) =
         client.apps().deployments().inNamespace(spec.namespace)
-            .withLabel("peersetId", peersetId.value.toString())
+            .withLabel("peerId", peerId.value)
             .list().items
 
     override fun getName(): String = "DeleteConsensusFollowerPercentage"

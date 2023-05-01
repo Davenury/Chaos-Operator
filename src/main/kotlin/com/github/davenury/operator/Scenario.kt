@@ -68,19 +68,19 @@ data class ActionSpec(
 
 @JsonDeserialize
 data class DeleteConsensusFollowerCountSpec(
-    val peersetId: Int,
-    val count: Int
+    val count: Int,
+    val peerUrl: String,
 )
 
 @JsonDeserialize
 data class DeleteConsensusFollowerPercentageSpec(
-    val peersetId: Int,
-    val percentage: Int
+    val percentage: Int,
+    val peerUrl: String,
 )
 
 @JsonDeserialize
 data class DeleteConsensusLeaderSpec(
-    val peersetId: Int
+    val peerUrl: String,
 )
 
 @JsonDeserialize

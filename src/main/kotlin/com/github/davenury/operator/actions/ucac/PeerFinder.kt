@@ -2,14 +2,13 @@ package com.github.davenury.operator.actions.ucac
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.github.davenury.operator.httpClient
-import io.fabric8.kubernetes.client.KubernetesClient
 import io.ktor.client.call.*
 import io.ktor.client.request.*
 import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
 
 interface PeerFinder {
-    fun findConsensusLeader(peersetId: PeersetId, namespace: String): PeerId?
+    fun findConsensusLeader(peerUrl: String): PeersetInformation?
 
     companion object {
         fun create(): PeerFinder =
@@ -17,21 +16,33 @@ interface PeerFinder {
     }
 }
 
-data class PeerId(val value: Int)
-data class PeersetId(val value: Int)
+data class PeerId(val value: String)
+data class PeersetId(val value: String)
+
+data class PeersetInformation(
+    val currentConsensusLeader: PeerId?,
+    val peersInPeerset: List<PeerId>
+)
+private data class PeersetInformationDto(
+    val currentConsensusLeaderId: String?,
+    val peersInPeerset: List<String>
+) {
+    fun toDomain() = PeersetInformation(
+        this.currentConsensusLeaderId?.let { PeerId(it) },
+        this.peersInPeerset.map { PeerId(it) }
+    )
+}
 
 class PeerFinderImplementation : PeerFinder {
-    override fun findConsensusLeader(peersetId: PeersetId, namespace: String): PeerId? =
-        getLeaderId(peersetId, namespace)
+    override fun findConsensusLeader(peerUrl: String): PeersetInformation? =
+        getLeaderId(peerUrl)
 
-    private fun getLeaderId(peersetId: PeersetId, namespace: String): PeerId? =
+    private fun getLeaderId(peerUrl: String): PeersetInformation? =
         runBlocking {
             try {
-                httpClient.get("http://peer0-peerset${peersetId.value}-service.${namespace}.svc.cluster.local:8081/consensus/current-leader")
-                    .body<CurrentLeaderResponse>()
-                    .currentLeaderPeerId?.let {
-                        PeerId(it)
-                    }
+                httpClient.get(peerUrl)
+                    .body<PeersetInformationDto>()
+                    .toDomain()
             } catch (e: Exception) {
                 logger.error("Could not get leader id", e)
                 null
