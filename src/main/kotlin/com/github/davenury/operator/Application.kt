@@ -1,14 +1,19 @@
 package com.github.davenury.operator
 
+import com.github.davenury.operator.auditlog.InMemoryAuditLog
+import com.github.davenury.operator.auditlog.auditLogRouting
+import io.ktor.serialization.jackson.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.metrics.micrometer.*
 import io.ktor.server.netty.*
+import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.routing.*
 import io.micrometer.core.instrument.Tag
 import io.micrometer.core.instrument.binder.jvm.JvmGcMetrics
 import io.micrometer.core.instrument.binder.jvm.JvmMemoryMetrics
 import io.micrometer.core.instrument.binder.system.ProcessorMetrics
+import java.time.Clock
 
 fun main() {
     embeddedServer(Netty, port = 8080, host = "0.0.0.0") {
@@ -25,11 +30,19 @@ fun main() {
             }
         }
 
-        val operator = ScenarioOperator()
+        install(ContentNegotiation) {
+            jackson()
+        }
+
+        val clock = Clock.systemUTC()
+        val auditLog = InMemoryAuditLog(clock)
+
+        val operator = ScenarioOperator(auditLog)
         operator.run()
 
         routing {
             metaRouting()
+            auditLogRouting(auditLog)
         }
     }.start(wait = true)
 }

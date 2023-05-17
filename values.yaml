@@ -1,0 +1,9 @@
+operator:
+  image: ghcr.io/davenury/chaos-operator:latest
+
+ingress:
+  enabled: false
+
+namespace:
+  name: ddebowski
+  enabled: false

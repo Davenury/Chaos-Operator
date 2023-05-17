@@ -5,6 +5,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule
 import com.github.davenury.operator.actions.Action
+import com.github.davenury.operator.auditlog.AuditLog
 import com.github.davenury.operator.state.ScenarioStateHolder
 import io.fabric8.kubernetes.client.KubernetesClient
 import io.fabric8.kubernetes.client.utils.Serialization
@@ -14,7 +15,8 @@ import org.slf4j.LoggerFactory
 @ControllerConfiguration
 class ScenarioReconciler(
     private val client: KubernetesClient,
-    private val stateHolder: ScenarioStateHolder
+    private val stateHolder: ScenarioStateHolder,
+    private val auditLog: AuditLog,
 ) : Reconciler<Scenario>, ErrorStatusHandler<Scenario> {
 
     init {
@@ -40,7 +42,7 @@ class ScenarioReconciler(
                 }
 
                 if (!scenarioState.isCompleted()) {
-                    actions[scenarioName] = scenario.applyActions(scenarioState.phase, client)
+                    actions[scenarioName] = scenario.applyActions(scenarioState.phase, client).onEach { auditLog.logAction(it, scenarioName.name) }
 
                     val scheduleIn = scenario.getDurationOfPhase(scenarioState.phase)
 
