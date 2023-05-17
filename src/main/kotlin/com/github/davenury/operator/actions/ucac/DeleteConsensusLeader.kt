@@ -19,15 +19,14 @@ class DeleteConsensusLeader(
     private var scaleDeploymentAction: ScaleDeploymentAction? = null
 
     override fun applyAction(client: KubernetesClient) {
-        val peersetId = PeersetId(spec.deleteConsensusLeaderSpec!!.peersetId)
         val peerFinder = PeerFinder.create()
-        val leaderId = peerFinder.findConsensusLeader(peersetId, spec.namespace) ?: kotlin.run {
+        val leaderId = peerFinder.findConsensusLeader(peerUrl = spec.deleteConsensusLeaderSpec!!.peerUrl)?.currentConsensusLeader ?: kotlin.run {
             logger.error("Could not find consensus leader")
             return
         }
-        val deployments = getDeployment(client, leaderId, peersetId)
+        val deployments = getDeployment(client, leaderId)
         if (deployments.isEmpty()) {
-            logger.error("There's no deployment with consensus leader - peersetId: ${peersetId.value}, leader peerId: ${leaderId.value}")
+            logger.error("There's no deployment with consensus leader peerId: ${leaderId.value}")
             return
         }
         scaleDeploymentAction = ScaleDeploymentAction(
@@ -49,10 +48,9 @@ class DeleteConsensusLeader(
 
     override fun getName(): String = "Delete consensus leader"
 
-    private fun getDeployment(client: KubernetesClient, peerId: PeerId, peersetId: PeersetId) =
+    private fun getDeployment(client: KubernetesClient, peerId: PeerId) =
         client.apps().deployments().inNamespace(spec.namespace)
             .withLabel("peerId", peerId.value.toString())
-            .withLabel("peersetId", peersetId.value.toString())
             .list().items
 
     companion object {

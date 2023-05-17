@@ -31,6 +31,7 @@ class ScenarioReconciler(
         scenario?.let { scenario ->
             val scenarioName = ScenarioName(scenario.metadata.name)
             try {
+                Metrics.bumpPhaseChange(scenarioName)
                 val scenarioState = stateHolder.getScenarioState(scenarioName)
                 scenario.status = ScenarioStatus().apply { this.status = scenarioState.status }
 
@@ -50,7 +51,6 @@ class ScenarioReconciler(
                     return UpdateControl.updateStatus(scenario).rescheduleAfter(scheduleIn)
                 }
 
-                Metrics.bumpPhaseChange(scenarioName)
                 return UpdateControl.updateStatus(scenario.apply { scenario.status.status = scenarioState.status })
             } catch (e: Exception) {
                 return onError(e, scenarioName, scenario)

@@ -45,30 +45,33 @@ spec:
                             deleteConsensusFollowerPercentageSpec:
                               type: object
                               properties:
-                                peersetId:
-                                  type: number
+                                peerUrl:
+                                  type: string
+                                  description: full url for asking for peerset information data stucture, e.g. http://peer0-service.svc.cluster.local:8081/peerset-information?peerset=peerset0
                                 percentage:
                                   type: number
                               required:
-                                - peersetId
+                                - peerUrl
                                 - percentage
                             deleteConsensusFollowerCountSpec:
                               type: object
                               properties:
-                                peersetId:
-                                  type: number
+                                peerUrl:
+                                  type: string
+                                  description: full url for asking for peerset information data stucture, e.g. http://peer0-service.svc.cluster.local:8081/peerset-information?peerset=peerset0
                                 count:
                                   type: number
                               required:
-                                - peersetId
+                                - peerUrl
                                 - count
                             deleteConsensusLeaderSpec:
                               type: object
                               properties:
-                                peersetId:
-                                  type: number
+                                peerUrl:
+                                  type: string
+                                  description: full url for asking for peerset information data stucture, e.g. http://peer0-service.svc.cluster.local:8081/peerset-information?peerset=peerset0
                               required:
-                                - peersetId
+                                - peerUrl
                             scaleDeploymentSpec:
                               type: object
                               properties:
